@@ -1,0 +1,869 @@
+cat > /mnt/user-data/outputs/gloss-customer.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Gloss — Premium Local Services</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#09090F;color:#E8E0F0;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:72px;-webkit-font-smoothing:antialiased}
+:root{--p:#8B5CF6;--lav:#CE93D8;--gold:#F5A623;--green:#66BB6A;--blue:#4FC3F7;--red:#EF5350;--card:#111118;--border:#1a1a28;--deep:#0d0d16;--surface:#0f0f1a}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#09090F}::-webkit-scrollbar-thumb{background:#2a2a3a;border-radius:4px}
+
+/* ── BOTTOM NAV (mobile-first app feel) ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(9,9,15,0.97);backdrop-filter:blur(20px);border-top:1px solid #151520;display:flex;justify-content:space-around;align-items:center;padding:10px 0 max(10px,env(safe-area-inset-bottom));padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;cursor:pointer;border:none;background:none;font-family:inherit;transition:all .2s;border-radius:12px;min-width:64px}
+.bn-icon{font-size:20px;transition:transform .2s}
+.bn-label{font-size:10px;color:#444;font-weight:600;letter-spacing:0.3px;transition:color .2s}
+.bn-item.active .bn-label{color:var(--lav)}
+.bn-item.active .bn-icon{transform:scale(1.1)}
+.bn-book{background:linear-gradient(135deg,var(--p),var(--lav));border-radius:16px;padding:10px 20px}
+.bn-book .bn-label{color:rgba(255,255,255,0.9)}
+.bn-book .bn-icon{font-size:22px}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:calc(100vh - 72px);animation:fadeIn .2s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── HOME SCREEN ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 20px 100px;position:relative;overflow:hidden}
+.hero-orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 65%);top:20%;left:50%;transform:translateX(-50%);pointer-events:none}
+.hero-orb2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(206,147,216,0.08) 0%,transparent 65%);bottom:20%;right:5%;pointer-events:none}
+.gloss-wordmark{font-family:'DM Serif Display',serif;font-size:15px;letter-spacing:6px;color:var(--lav);text-transform:uppercase;margin-bottom:28px;opacity:0.8}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(44px,9vw,80px);line-height:1.05;margin-bottom:20px;background:linear-gradient(150deg,#fff 0%,#e0d4f5 35%,var(--lav) 70%,var(--p) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-title em{font-style:italic}
+.hero-sub{font-size:15px;color:#666;max-width:380px;line-height:1.8;margin-bottom:36px}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.hbadge{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.03);border:1px solid #1a1a28;border-radius:20px;padding:6px 12px;font-size:11px;color:#666}
+.hbadge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0}
+.hero-btn{padding:16px 36px;background:linear-gradient(135deg,var(--p),var(--lav));border:none;border-radius:14px;color:#fff;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;box-shadow:0 8px 32px rgba(139,92,246,0.3);transition:all .2s}
+.hero-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(139,92,246,0.4)}
+
+/* ── SECTION STYLES ── */
+.pad{padding:60px 20px}
+.label-sm{font-size:10px;letter-spacing:3px;color:var(--lav);font-weight:700;text-transform:uppercase;margin-bottom:8px}
+.h2{font-family:'DM Serif Display',serif;font-size:clamp(24px,5vw,36px);margin-bottom:8px}
+.sub{color:#555;font-size:14px;line-height:1.7;margin-bottom:28px}
+
+/* ── OPEN NOW STRIP ── */
+.open-strip{padding:0 0 0 20px;margin-bottom:40px;overflow:hidden}
+.open-scroll{display:flex;gap:12px;overflow-x:auto;padding-right:20px;padding-bottom:8px;scrollbar-width:none}
+.open-scroll::-webkit-scrollbar{display:none}
+.open-card{flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s}
+.open-card:hover{transform:translateY(-2px)}
+.open-img{width:100%;height:80px;object-fit:cover}
+.open-body{padding:10px}
+.open-name{font-weight:700;font-size:12px;margin-bottom:2px}
+.open-type{font-size:10px;color:#555;margin-bottom:4px}
+.open-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(102,187,106,0.1);border-radius:10px;padding:2px 7px;font-size:10px;color:var(--green);font-weight:600}
+.open-badge::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* ── HOW IT WORKS ── */
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px;margin:0 auto}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 16px}
+.step-num{font-size:10px;font-weight:700;color:var(--p);letter-spacing:2px;margin-bottom:10px}
+.step-icon{font-size:24px;margin-bottom:10px}
+.step-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.step-desc{font-size:12px;color:#555;line-height:1.6}
+
+/* ── ESCROW BANNER ── */
+.escrow-card{background:linear-gradient(135deg,#0f0c1e,#0d0d16);border:1px solid rgba(139,92,246,0.18);border-radius:18px;padding:24px;margin:0 20px 40px;display:flex;gap:16px}
+.escrow-icon{font-size:28px;flex-shrink:0}
+.escrow-title{font-weight:700;font-size:15px;color:var(--lav);margin-bottom:6px}
+.escrow-desc{font-size:13px;color:#555;line-height:1.7}
+
+/* ── BOOKING SCREEN ── */
+.booking-wrap{max-width:600px;margin:0 auto;padding:24px 20px 100px}
+.screen-header{text-align:center;padding:20px 0 32px}
+.progress-row{display:flex;align-items:center;justify-content:center;margin-bottom:40px}
+.pc{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #222232;color:#333;background:var(--deep);transition:all .3s;flex-shrink:0}
+.pc.active{border-color:var(--p);color:var(--lav);background:#1a1728}
+.pc.done{border-color:var(--green);color:var(--green);background:#0a140a}
+.pl{font-size:9px;color:#333;white-space:nowrap;margin-top:4px;transition:color .3s}
+.pl.active{color:var(--lav)}
+.pstep{display:flex;flex-direction:column;align-items:center;gap:0}
+.pline{width:32px;height:2px;background:#1a1a28;margin-bottom:16px;flex-shrink:0;transition:background .4s}
+.pline.done{background:var(--p)}
+.panel{display:none}
+.panel.on{display:block;animation:slideUp .25s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ptitle{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px}
+.psub{color:#555;font-size:13px;margin-bottom:24px;line-height:1.6}
+
+/* ── GPS ── */
+.gps-card{background:linear-gradient(135deg,#12102a,#0d0d1a);border:2px solid rgba(139,92,246,0.25);border-radius:14px;padding:18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .3s}
+.gps-card:hover{border-color:var(--p)}
+.gps-card.detecting{border-color:var(--gold);animation:glow 1.5s ease-in-out infinite}
+.gps-card.ok{border-color:var(--green);background:#0a120a}
+.gps-card.fail{border-color:#222;cursor:default;opacity:0.7}
+@keyframes glow{0%,100%{box-shadow:none}50%{box-shadow:0 0 16px rgba(245,166,35,0.2)}}
+.gps-ico{font-size:26px;flex-shrink:0}
+.gps-title{font-weight:700;font-size:14px;margin-bottom:2px}
+.gps-sub{font-size:11px;color:#555}
+.divider{display:flex;align-items:center;gap:10px;color:#333;font-size:11px;margin:12px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#1a1a28}
+
+/* ── LOC GRID ── */
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.loc-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:12px;text-align:left;cursor:pointer;font-family:inherit;transition:all .2s}
+.loc-btn:hover{border-color:#2a2a3a}
+.loc-btn.sel{border-color:var(--p);background:#1a1728}
+.loc-name{font-weight:600;font-size:12px;color:#E8E0F0;margin-bottom:2px}
+.loc-dist{font-size:10px;color:var(--lav)}
+.loc-count{font-size:10px;color:#444;margin-top:1px}
+
+/* ── SERVICE GRID ── */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.svc-card{background:var(--card);border:2px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+.svc-card:hover{border-color:#2a2a3a;transform:translateY(-1px)}
+.svc-card.sel{border-color:var(--p)}
+.svc-img{width:100%;height:90px;object-fit:cover}
+.svc-body{padding:10px 12px}
+.svc-name{font-weight:700;font-size:13px;margin-bottom:2px}
+.svc-desc{font-size:10px;color:#555;line-height:1.5}
+
+/* ── VENDOR LIST ── */
+.vnd-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.vnd-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:inherit;transition:all .2s;text-align:left}
+.vnd-btn:hover{border-color:#2a2a3a}
+.vnd-btn.sel{border-color:var(--p);background:#1a1728}
+.vnd-name{font-weight:600;font-size:13px;color:#E8E0F0;margin-bottom:2px}
+.vnd-meta{font-size:11px;color:#555}
+.vnd-dist{font-size:10px;color:var(--lav);margin-top:2px}
+.vnd-right{text-align:right;flex-shrink:0}
+.vnd-rating{font-size:12px;color:var(--gold);font-weight:700}
+.vnd-open{font-size:10px;color:var(--green);margin-top:2px;font-weight:600}
+
+/* ── AVAILABILITY CALENDAR ── */
+.avail-header{font-size:12px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+.avail-scroll{display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;scrollbar-width:none}
+.avail-scroll::-webkit-scrollbar{display:none}
+.avail-day{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.avail-date{font-size:10px;color:#444;font-weight:600}
+.avail-slots{display:flex;flex-direction:column;gap:4px}
+.slot{background:var(--deep);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11px;color:#666;cursor:pointer;white-space:nowrap;transition:all .2s}
+.slot:hover{border-color:var(--p);color:var(--lav)}
+.slot.taken{opacity:0.3;cursor:not-allowed;text-decoration:line-through}
+.slot.sel{border-color:var(--p);background:#1a1728;color:var(--lav);font-weight:600}
+
+/* ── NEGOTIATE ── */
+.nego-box{background:var(--deep);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.nego-label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+.nego-chat{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;min-height:60px}
+.chat-bubble{max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.chat-bubble.them{background:#1a1728;border-bottom-left-radius:3px;align-self:flex-start;color:#E8E0F0}
+.chat-bubble.me{background:linear-gradient(135deg,var(--p),var(--lav));border-bottom-right-radius:3px;align-self:flex-end;color:#fff}
+.chat-time{font-size:10px;color:#444;margin-top:3px}
+.nego-input-row{display:flex;gap:8px}
+.nego-input{flex:1;background:#09090F;border:1px solid #222232;border-radius:10px;padding:10px 14px;color:#E8E0F0;font-size:14px;font-family:monospace;outline:none;transition:border-color .2s}
+.nego-input:focus{border-color:var(--p)}
+.nego-send{background:linear-gradient(135deg,var(--p),var(--lav));border:none;border-radius:10px;padding:10px 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* ── FORM ── */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.field input,.field select{width:100%;background:var(--deep);border:1px solid #222232;border-radius:10px;padding:12px 14px;color:#E8E0F0;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--p)}
+.field select option{background:var(--deep)}
+.toggle-group{display:flex;gap:8px}
+.tgl{flex:1;padding:10px;background:var(--deep);border:2px solid #222232;border-radius:10px;color:#555;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.tgl.sel{border-color:var(--p);color:var(--lav);background:#1a1728}
+
+/* ── PRICE BOX ── */
+.price-box{background:var(--deep);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.pr{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;color:#666}
+.pr.total{border-top:1px solid var(--border);padding-top:10px;margin-top:4px;font-weight:700;font-size:15px;color:#E8E0F0}
+
+/* ── SUMMARY ── */
+.sum-card{background:var(--card);border:1px solid rgba(139,92,246,0.15);border-radius:14px;padding:18px;margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-bottom:1px solid #0f0f1a}
+.sum-row:last-child{border-bottom:none}
+.sum-lbl{color:#555}
+.sum-val{font-weight:600}
+.escrow-note{background:#09090F;border:1px solid #1a1a28;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#555;line-height:1.7}
+
+/* ── BUTTONS ── */
+.btns{display:flex;gap:8px;margin-top:8px}
+.btn-back{padding:13px 20px;background:transparent;border:1px solid #222232;border-radius:11px;color:#555;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-back:hover{border-color:var(--p);color:#E8E0F0}
+.btn-next{flex:1;padding:13px;background:linear-gradient(135deg,var(--p),var(--lav));border:none;border-radius:11px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-next:disabled{opacity:0.3;cursor:not-allowed}
+
+/* ── SUCCESS ── */
+.success{text-align:center;padding:16px 0}
+.success-ring{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--lav));display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px;box-shadow:0 0 40px rgba(139,92,246,0.3)}
+.success-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:6px}
+.success-sub{color:#555;font-size:13px;margin-bottom:24px;line-height:1.7}
+.token-box{background:linear-gradient(135deg,#0f0c1e,#0d0d18);border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:18px 20px;margin-bottom:16px;text-align:left}
+.token-lbl{font-size:9px;color:var(--lav);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px}
+.token-val{font-family:monospace;font-size:24px;font-weight:700;letter-spacing:4px;margin-bottom:8px}
+.token-copy{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#555;cursor:pointer;border:1px solid #222232;background:none;font-family:inherit;padding:5px 12px;border-radius:8px;transition:all .2s}
+.token-copy:hover{border-color:var(--p);color:var(--lav)}
+.what-next{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left}
+.wn-title{font-size:10px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.wn-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:12px;color:#666}
+.wn-step:last-child{margin-bottom:0}
+.wn-num{width:18px;height:18px;border-radius:50%;background:var(--p);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.duo-btns{display:flex;gap:8px;flex-wrap:wrap}
+.duo-btns .btn-next{flex:1;min-width:120px}
+
+/* ── EXPLORE SCREEN ── */
+.explore-wrap{padding:20px 20px 0}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.search-icon{font-size:16px;color:#444}
+.search-input{flex:1;background:none;border:none;color:#E8E0F0;font-size:14px;font-family:inherit;outline:none}
+.search-input::placeholder{color:#333}
+.filter-scroll{display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;scrollbar-width:none}
+.filter-scroll::-webkit-scrollbar{display:none}
+.filter-pill{flex-shrink:0;padding:7px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:12px;color:#555;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .2s}
+.filter-pill.active{background:#1a1728;border-color:var(--p);color:var(--lav);font-weight:600}
+.vendor-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vcard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+.vcard:hover{transform:translateY(-2px);border-color:#2a2a3a}
+.vcard-img{width:100%;height:110px;object-fit:cover;position:relative}
+.vcard-open{position:absolute;top:8px;right:8px;background:rgba(10,20,10,0.85);border-radius:8px;padding:3px 8px;font-size:10px;color:var(--green);font-weight:700}
+.vcard-body{padding:12px}
+.vcard-name{font-weight:700;font-size:13px;margin-bottom:2px}
+.vcard-type{font-size:10px;color:#555;margin-bottom:6px}
+.vcard-bottom{display:flex;justify-content:space-between;align-items:center}
+.vcard-rating{font-size:11px;color:var(--gold);font-weight:600}
+.vcard-dist{font-size:10px;color:#444}
+.gloss-score{display:inline-flex;align-items:center;gap:4px;background:rgba(139,92,246,0.1);border-radius:8px;padding:2px 7px;font-size:10px;color:var(--lav);font-weight:700;margin-top:4px}
+
+/* ── TRACK SCREEN ── */
+.track-wrap{max-width:480px;margin:0 auto;padding:40px 20px 100px;text-align:center}
+.track-title{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:6px}
+.track-sub{color:#555;font-size:13px;margin-bottom:28px}
+.track-row{display:flex;gap:8px;margin-bottom:12px}
+.track-inp{flex:1;background:var(--deep);border:1px solid #222232;border-radius:10px;padding:13px 14px;color:#E8E0F0;font-size:15px;font-family:monospace;outline:none;text-transform:uppercase;letter-spacing:2px;transition:border-color .2s}
+.track-inp:focus{border-color:var(--p)}
+.track-result{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:left;animation:slideUp .25s ease}
+.tl-wrap{display:flex;flex-direction:column;gap:0}
+.tl-row{display:flex;gap:12px;position:relative}
+.tl-row:not(:last-child)::after{content:'';position:absolute;left:9px;top:20px;width:2px;bottom:-4px;background:#1a1a28}
+.tl-dot{width:20px;height:20px;border-radius:50%;border:2px solid #2a2a3a;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;background:#09090F;z-index:1}
+.tl-dot.done{border-color:var(--green);color:var(--green);background:#0a140a}
+.tl-dot.cur{border-color:var(--p);color:var(--lav);background:#1a1728}
+.tl-body{padding-bottom:18px}
+.tl-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.tl-time{font-size:11px;color:#444}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:88px;right:16px;background:#1a1728;border:1px solid var(--p);border-radius:12px;padding:11px 16px;font-size:12px;color:var(--lav);font-weight:600;z-index:300;transform:translateY(8px);opacity:0;transition:all .25s;pointer-events:none;max-width:240px}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:400px){
+  .svc-grid,.loc-grid,.vendor-cards{grid-template-columns:1fr}
+  .hero-title{font-size:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HOME SCREEN ── -->
+<div class="screen active" id="s-home">
+  <section class="hero">
+    <div class="hero-orb1"></div><div class="hero-orb2"></div>
+    <div class="gloss-wordmark">Gloss</div>
+    <h1 class="hero-title">Look good,<br/><em>pay safe.</em></h1>
+    <p class="hero-sub">Book verified hair stylists, barbers and laundry services near you. Escrow protects every payment.</p>
+    <div class="hero-badges">
+      <div class="hbadge"><span class="hbadge-dot"></span>Escrow-protected</div>
+      <div class="hbadge"><span class="hbadge-dot"></span>Verified vendors</div>
+      <div class="hbadge"><span class="hbadge-dot"></span>No cash needed</div>
+    </div>
+    <button class="hero-btn" onclick="goScreen('s-book');initBook()">Book a service →</button>
+  </section>
+
+  <!-- Open Now -->
+  <div class="open-strip">
+    <div style="padding:0 0 12px;font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:2px">Open Now</div>
+    <div class="open-scroll" id="open-now-scroll"></div>
+  </div>
+
+  <!-- How it works -->
+  <div class="pad" style="padding-top:20px" id="how-section">
+    <div style="max-width:700px;margin:0 auto">
+      <div class="label-sm">How it works</div>
+      <div class="h2">Simple. Safe. 4 steps.</div>
+      <div class="sub">From booking to being served — all protected.</div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">01</div><div class="step-icon">📍</div><div class="step-title">Share your location</div><div class="step-desc">We find vendors closest to you first.</div></div>
+        <div class="step-card"><div class="step-num">02</div><div class="step-icon">✂</div><div class="step-title">Pick a service</div><div class="step-desc">Hair, barbing, extensions or laundry — sorted by distance.</div></div>
+        <div class="step-card"><div class="step-num">03</div><div class="step-icon">🔒</div><div class="step-title">Negotiate & lock in</div><div class="step-desc">Name your price. Chat with the vendor. Escrow holds it until you're satisfied.</div></div>
+        <div class="step-card"><div class="step-num">04</div><div class="step-icon">✅</div><div class="step-title">Get served</div><div class="step-desc">Show your token. Service done → escrow releases automatically.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="escrow-card">
+    <div class="escrow-icon">🛡</div>
+    <div>
+      <div class="escrow-title">Your money is always safe.</div>
+      <div class="escrow-desc">Payment is held in escrow — not sent to the vendor — until your service is complete. A ₦1,500 punctuality bond keeps vendors on time, and it's refunded to you if they're late.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPLORE SCREEN ── -->
+<div class="screen" id="s-explore">
+  <div class="explore-wrap">
+    <div style="padding:20px 0 16px;font-family:'DM Serif Display',serif;font-size:22px">Find a vendor</div>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" placeholder="Search vendors, services…" oninput="filterVendors(this.value)"/>
+    </div>
+    <div class="filter-scroll" id="cat-filters"></div>
+    <div class="vendor-cards" id="vendor-cards"></div>
+  </div>
+</div>
+
+<!-- ── BOOKING SCREEN ── -->
+<div class="screen" id="s-book">
+  <div class="booking-wrap">
+    <div class="screen-header">
+      <div class="label-sm">Booking</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:26px">Book a service</div>
+    </div>
+
+    <div class="progress-row" id="prog-bar">
+      <div class="pstep"><div class="pc active" id="pc1">1</div><div class="pl active" id="pl1">Location</div></div>
+      <div class="pline" id="pl-1"></div>
+      <div class="pstep"><div class="pc" id="pc2">2</div><div class="pl" id="pl2">Service</div></div>
+      <div class="pline" id="pl-2"></div>
+      <div class="pstep"><div class="pc" id="pc3">3</div><div class="pl" id="pl3">Details</div></div>
+      <div class="pline" id="pl-3"></div>
+      <div class="pstep"><div class="pc" id="pc4">4</div><div class="pl" id="pl4">Confirm</div></div>
+    </div>
+
+    <!-- P1: Location -->
+    <div class="panel on" id="p1">
+      <div class="ptitle">Where are you?</div>
+      <div class="psub">We'll show vendors closest to you.</div>
+      <div class="gps-card" id="gps-card" onclick="detectGPS()">
+        <div class="gps-ico" id="gps-ico">📍</div>
+        <div><div class="gps-title" id="gps-title">Use my exact location</div><div class="gps-sub" id="gps-sub">Tap to detect — vendors sorted by distance</div></div>
+      </div>
+      <div class="divider">or pick manually</div>
+      <div class="loc-grid">
+        <button class="loc-btn" onclick="pickLoc(this,'UniUyo Perm Campus')"><div class="loc-name">UniUyo Perm Campus</div><div class="loc-dist">~0.2 km</div><div class="loc-count">8 vendors</div></button>
+        <button class="loc-btn" onclick="pickLoc(this,'UniUyo Town Campus')"><div class="loc-name">UniUyo Town Campus</div><div class="loc-dist">~1.4 km</div><div class="loc-count">6 vendors</div></button>
+        <button class="loc-btn" onclick="pickLoc(this,'Ikeja, Lagos')"><div class="loc-name">Ikeja, Lagos</div><div class="loc-dist">~0.8 km</div><div class="loc-count">14 vendors</div></button>
+        <button class="loc-btn" onclick="pickLoc(this,'Abuja FCT')"><div class="loc-name">Abuja (FCT)</div><div class="loc-dist">~0.5 km</div><div class="loc-count">11 vendors</div></button>
+      </div>
+      <div class="btns"><button class="btn-next" id="bn1" disabled onclick="step(2)">Next: Choose service →</button></div>
+    </div>
+
+    <!-- P2: Service + Vendor + Availability -->
+    <div class="panel" id="p2">
+      <div class="ptitle">What do you need?</div>
+      <div class="psub">Pick a service then choose a vendor.</div>
+      <div class="svc-grid">
+        <div class="svc-card" onclick="pickSvc(this,'Extension Store','💎')"><img class="svc-img" src="https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=400&q=80" alt=""/><div class="svc-body"><div class="svc-name">💎 Extensions</div><div class="svc-desc">Bundles, weaves, kits</div></div></div>
+        <div class="svc-card" onclick="pickSvc(this,'Hair Stylist','✂')"><img class="svc-img" src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=400&q=80" alt=""/><div class="svc-body"><div class="svc-name">✂ Hair Styling</div><div class="svc-desc">Braids, frontals, color</div></div></div>
+        <div class="svc-card" onclick="pickSvc(this,'Barber','💈')"><img class="svc-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80" alt=""/><div class="svc-body"><div class="svc-name">💈 Barbing</div><div class="svc-desc">Fades, dye, treatments</div></div></div>
+        <div class="svc-card" onclick="pickSvc(this,'Laundry','👕')"><img class="svc-img" src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=400&q=80" alt=""/><div class="svc-body"><div class="svc-name">👕 Laundry</div><div class="svc-desc">Dry clean, press, express</div></div></div>
+      </div>
+
+      <div id="vnd-section" style="display:none">
+        <div style="font-size:11px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Vendors near you</div>
+        <div class="vnd-list" id="vnd-list"></div>
+
+        <!-- Availability calendar -->
+        <div id="avail-section" style="display:none;margin-bottom:20px">
+          <div class="avail-header">Available slots</div>
+          <div class="avail-scroll" id="avail-slots"></div>
+          <div style="font-size:11px;color:#444;margin-top:6px">Tap a slot to reserve it</div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="btn-back" onclick="step(1)">← Back</button>
+        <button class="btn-next" id="bn2" disabled onclick="step(3)">Next: Details →</button>
+      </div>
+    </div>
+
+    <!-- P3: Details + Negotiate -->
+    <div class="panel" id="p3">
+      <div class="ptitle">Your details</div>
+      <div class="psub">Almost there. Fill in the last details.</div>
+      <div class="field"><label>Full name</label><input type="text" id="f-name" placeholder="e.g. Amara Okonkwo" oninput="chk3()"/></div>
+      <div class="field"><label>Email</label><input type="email" id="f-email" placeholder="you@example.com" oninput="chk3()"/></div>
+      <div class="field"><label>How many people?</label>
+        <select id="f-slots" onchange="chk3()">
+          <option value="">Select</option>
+          <option value="1">Just me</option>
+          <option value="2">Me + 1 friend</option>
+          <option value="3">Group of 3+</option>
+        </select>
+      </div>
+      <div id="extras-hair" style="display:none">
+        <div class="field"><label>Bring your own extensions?</label>
+          <div class="toggle-group">
+            <button class="tgl" id="ext-y" onclick="togExt('yes')">Yes, mine</button>
+            <button class="tgl" id="ext-n" onclick="togExt('no')">No, supply them</button>
+          </div>
+        </div>
+        <div id="ext-pick" style="display:none">
+          <div class="field"><label>Extension type</label>
+            <select id="f-ext" onchange="updPrice()">
+              <option value="0">Select</option>
+              <option value="5500">Lush Extensions (Small) — ₦5,500</option>
+              <option value="9000">Lush Extensions (Medium) — ₦9,000</option>
+              <option value="12500">X-Pression Ultra Braid — ₦12,500</option>
+              <option value="28000">Premium Bundle — ₦28,000</option>
+            </select>
+          </div>
+          <div class="field"><label>Colour</label>
+            <select id="f-color">
+              <option>Color 1 — Jet Black</option><option>Color 2 — Dark Brown</option>
+              <option>Color 33 — Rich Burgundy</option><option>Color 27 — Honey Blonde</option>
+              <option>Custom Mixed Combo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Negotiate price -->
+      <div class="field"><label>Your price offer (₦)</label>
+        <input type="number" id="f-price" placeholder="e.g. 8000" oninput="updPrice();chk3()"/>
+        <div style="font-size:11px;color:#444;margin-top:5px">Negotiate with the vendor below before locking in.</div>
+      </div>
+
+      <div class="nego-box">
+        <div class="nego-label">💬 Negotiate with vendor</div>
+        <div class="nego-chat" id="nego-chat">
+          <div class="chat-bubble them">Hi! I can do this for ₦9,000 — does that work for you?<div class="chat-time">Vendor · Just now</div></div>
+        </div>
+        <div class="nego-input-row">
+          <input class="nego-input" id="nego-inp" type="number" placeholder="Counter-offer (₦)" onkeydown="if(event.key==='Enter')sendNego()"/>
+          <button class="nego-send" onclick="sendNego()">Send ↑</button>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="pr"><span>Your offer</span><span id="pr-off">₦0</span></div>
+        <div class="pr"><span>Extensions</span><span id="pr-ext">+ ₦0</span></div>
+        <div class="pr"><span>Punctuality bond <span style="color:var(--lav);font-size:10px">(refundable if late)</span></span><span style="color:var(--gold)">+ ₦1,500</span></div>
+        <div class="pr total"><span>Total in escrow</span><span style="color:var(--lav)" id="pr-tot">₦1,500</span></div>
+      </div>
+
+      <div class="btns">
+        <button class="btn-back" onclick="step(2)">← Back</button>
+        <button class="btn-next" id="bn3" disabled onclick="step(4)">Review →</button>
+      </div>
+    </div>
+
+    <!-- P4: Confirm -->
+    <div class="panel" id="p4">
+      <div class="ptitle">Review booking</div>
+      <div class="psub">Everything look right?</div>
+      <div class="sum-card" id="sum-card"></div>
+      <div class="escrow-note">🔒 Payment is held in escrow until your service is done. The ₦1,500 punctuality bond is refunded if the vendor is late.</div>
+      <div class="btns">
+        <button class="btn-back" onclick="step(3)">← Edit</button>
+        <button class="btn-next" onclick="submitBook()">🔒 Confirm & send</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="panel" id="p-ok">
+      <div class="success">
+        <div class="success-ring">🎉</div>
+        <div class="success-title">You're booked!</div>
+        <div class="success-sub">Your booking is with the vendor. They'll confirm shortly. Payment is safe in escrow.</div>
+        <div class="token-box">
+          <div class="token-lbl">Your Gloss Token</div>
+          <div class="token-val" id="tok-val">GLW-XXXX</div>
+          <button class="token-copy" onclick="cpyTok()">📋 Copy</button>
+        </div>
+        <div class="what-next">
+          <div class="wn-title">What's next</div>
+          <div class="wn-step"><div class="wn-num">1</div><span>Vendor confirms or negotiates within minutes</span></div>
+          <div class="wn-step"><div class="wn-num">2</div><span>Show your token when you arrive</span></div>
+          <div class="wn-step"><div class="wn-num">3</div><span>Service done → escrow releases automatically</span></div>
+        </div>
+        <div class="duo-btns">
+          <button class="btn-next" onclick="goScreen('s-track')">Track order</button>
+          <button class="btn-back" onclick="resetBook()">Book again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TRACK SCREEN ── -->
+<div class="screen" id="s-track">
+  <div class="track-wrap">
+    <div class="track-title">Track your order</div>
+    <div class="track-sub">Enter your Gloss token to see your order status.</div>
+    <div class="track-row">
+      <input class="track-inp" id="trk-inp" placeholder="GLW-XXXX" maxlength="8"/>
+      <button class="btn-next" style="flex:0;padding:13px 16px;font-size:13px" onclick="doTrack()">Track →</button>
+    </div>
+    <div id="trk-result"></div>
+    <div style="margin-top:20px;font-size:11px;color:#333;text-align:center">Try: GLW-A3X2 · GLW-B7K9 · GLW-E8Q7</div>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <button class="bn-item active" id="bn-home" onclick="goScreen('s-home')"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></button>
+  <button class="bn-item" id="bn-explore" onclick="goScreen('s-explore')"><span class="bn-icon">🔍</span><span class="bn-label">Explore</span></button>
+  <button class="bn-item bn-book" id="bn-book" onclick="goScreen('s-book');initBook()"><span class="bn-icon">✦</span><span class="bn-label">Book</span></button>
+  <button class="bn-item" id="bn-track" onclick="goScreen('s-track')"><span class="bn-icon">📦</span><span class="bn-label">Track</span></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const VENDORS_DB={
+  'Extension Store':[
+    {name:'Premium Imports',meta:'UniUyo Perm Campus',dist:'0.2 km',rating:'⭐ 4.8',score:96,open:true,img:'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=400&q=80'},
+    {name:'Luxe Hair Hub',meta:'Fast delivery',dist:'0.6 km',rating:'⭐ 4.6',score:88,open:true,img:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80'},
+    {name:"Queens Collection",meta:'Bulk discounts',dist:'1.1 km',rating:'⭐ 4.7',score:91,open:false,img:'https://images.unsplash.com/photo-1560066984-138daaa0-20c9?auto=format&fit=crop&w=400&q=80'},
+  ],
+  'Hair Stylist':[
+    {name:'Adaeze Styles',meta:'Knotless specialist',dist:'0.3 km',rating:'⭐ 4.9',score:98,open:true,img:'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=400&q=80'},
+    {name:'Hair by Blessing',meta:'Frontal & color',dist:'0.8 km',rating:'⭐ 4.7',score:92,open:false,img:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80'},
+  ],
+  'Barber':[
+    {name:'King Cuts',meta:'Fades & dye',dist:'0.4 km',rating:'⭐ 4.8',score:94,open:true,img:'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80'},
+    {name:'Chukwu Blends',meta:'Low cut specialist',dist:'0.9 km',rating:'⭐ 4.6',score:87,open:true,img:'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80'},
+  ],
+  'Laundry':[
+    {name:'FreshPress',meta:'Express same-day',dist:'0.5 km',rating:'⭐ 4.7',score:93,open:true,img:'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=400&q=80'},
+    {name:'CleanEdge',meta:'Delicate fabrics',dist:'1.2 km',rating:'⭐ 4.5',score:85,open:false,img:'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=400&q=80'},
+  ],
+};
+
+const DEMO_ORDERS={
+  'GLW-A3X2':{service:'Lush Extensions (Medium)',vendor:'Premium Imports',amount:9000,status:'in-progress',timeline:[
+    {t:'Booking sent',time:'Today 10:14',done:true},{t:'Vendor accepted',time:'Today 10:18',done:true},
+    {t:'Service in progress',time:'Today 11:00',done:false,cur:true},{t:'Escrow released',time:'Pending',done:false}]},
+  'GLW-B7K9':{service:'Knotless Braids (Large)',vendor:'Adaeze Styles',amount:25000,status:'pending',timeline:[
+    {t:'Booking sent',time:'Today 11:00',done:true},{t:'Awaiting vendor',time:'Pending',done:false,cur:true},
+    {t:'Service in progress',time:'—',done:false},{t:'Escrow released',time:'—',done:false}]},
+  'GLW-E8Q7':{service:'Lush Extensions (Small)',vendor:'Premium Imports',amount:5500,status:'done',timeline:[
+    {t:'Booking sent',time:'Yesterday 09:22',done:true},{t:'Vendor accepted',time:'Yesterday 09:25',done:true},
+    {t:'Service completed',time:'Yesterday 12:40',done:true},{t:'Escrow released',time:'Yesterday 12:41',done:true}]},
+};
+
+let ST={loc:'',locLabel:'',svc:'',svcIcon:'',vendor:'',slot:'',extChoice:null,step:1};
+
+// ── INIT ──
+buildOpenNow();
+buildExplore();
+
+function buildOpenNow(){
+  const all=Object.values(VENDORS_DB).flat().filter(v=>v.open);
+  document.getElementById('open-now-scroll').innerHTML=all.map(v=>`
+    <div class="open-card" onclick="goScreen('s-explore')">
+      <div style="position:relative"><img class="open-img" src="${v.img}" alt=""/>
+      <div style="position:absolute;top:6px;right:6px;background:rgba(10,20,10,0.85);border-radius:6px;padding:2px 7px;font-size:9px;color:var(--green);font-weight:700">OPEN</div></div>
+      <div class="open-body"><div class="open-name">${v.name}</div><div class="open-type">${v.dist} away</div></div>
+    </div>`).join('');
+}
+
+let activeCat='All';
+function buildExplore(search=''){
+  const cats=['All','Extensions','Hair Styling','Barbing','Laundry'];
+  document.getElementById('cat-filters').innerHTML=cats.map(c=>`<button class="filter-pill${c===activeCat?' active':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+  const catMap={'Extensions':'Extension Store','Hair Styling':'Hair Stylist','Barbing':'Barber','Laundry':'Laundry'};
+  let all=Object.entries(VENDORS_DB).flatMap(([type,vendors])=>vendors.map(v=>({...v,type})));
+  if(activeCat!=='All')all=all.filter(v=>v.type===catMap[activeCat]);
+  if(search)all=all.filter(v=>v.name.toLowerCase().includes(search.toLowerCase())||v.type.toLowerCase().includes(search.toLowerCase()));
+  document.getElementById('vendor-cards').innerHTML=all.map(v=>`
+    <div class="vcard" onclick="goScreen('s-book');initBook();pickSvcByName('${v.type}','${v.name}')">
+      <div class="vcard-img" style="position:relative">
+        <img src="${v.img}" alt="" style="width:100%;height:110px;object-fit:cover;display:block"/>
+        ${v.open?'<div class="vcard-open">Open</div>':''}
+      </div>
+      <div class="vcard-body">
+        <div class="vcard-name">${v.name}</div>
+        <div class="vcard-type">${v.type}</div>
+        <div class="vcard-bottom"><span class="vcard-rating">${v.rating}</span><span class="vcard-dist">${v.dist}</span></div>
+        <div class="gloss-score">✦ Gloss ${v.score}</div>
+      </div>
+    </div>`).join('');
+}
+
+function setCat(c){activeCat=c;buildExplore();}
+function filterVendors(q){buildExplore(q);}
+
+// ── GPS ──
+function detectGPS(){
+  const card=document.getElementById('gps-card');
+  if(!navigator.geolocation){setGPSFail();return;}
+  card.className='gps-card detecting';card.onclick=null;
+  document.getElementById('gps-ico').textContent='⏳';
+  document.getElementById('gps-title').textContent='Detecting your location…';
+  document.getElementById('gps-sub').textContent='Allow location access if prompted';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      card.className='gps-card ok';
+      document.getElementById('gps-ico').textContent='✅';
+      document.getElementById('gps-title').textContent='Location found!';
+      document.getElementById('gps-sub').textContent=`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)} · Sorted by distance`;
+      ST.loc=`${pos.coords.latitude},${pos.coords.longitude}`;
+      ST.locLabel='Your current location';
+      document.getElementById('bn1').disabled=false;
+      document.querySelectorAll('.loc-btn').forEach(b=>b.classList.remove('sel'));
+      toast('📍 Location detected!');
+    },
+    ()=>{setGPSFail();},
+    {timeout:10000}
+  );
+}
+
+function setGPSFail(){
+  const card=document.getElementById('gps-card');
+  card.className='gps-card fail';
+  document.getElementById('gps-ico').textContent='❌';
+  document.getElementById('gps-title').textContent='Could not detect location';
+  document.getElementById('gps-sub').textContent='Pick your area manually below';
+}
+
+function pickLoc(el,loc){
+  ST.loc=loc;ST.locLabel=loc;
+  document.querySelectorAll('.loc-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('bn1').disabled=false;
+  const card=document.getElementById('gps-card');
+  if(!card.classList.contains('ok')){
+    card.className='gps-card';
+    document.getElementById('gps-ico').textContent='📍';
+    document.getElementById('gps-title').textContent='Use my exact location';
+    document.getElementById('gps-sub').textContent='Tap to detect — vendors sorted by distance';
+    card.onclick=()=>detectGPS();
+  }
+}
+
+// ── SERVICE + VENDOR ──
+function pickSvc(el,svc,icon){
+  ST.svc=svc;ST.svcIcon=icon;ST.vendor='';ST.slot='';
+  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('extras-hair').style.display=svc==='Hair Stylist'?'block':'none';
+  const vl=document.getElementById('vnd-list');vl.innerHTML='';
+  (VENDORS_DB[svc]||[]).forEach(v=>{
+    const b=document.createElement('button');b.className='vnd-btn';
+    b.innerHTML=`<div><div class="vnd-name">${v.name}</div><div class="vnd-meta">${v.meta}</div><div class="vnd-dist">📍 ${v.dist}</div></div><div class="vnd-right"><div class="vnd-rating">${v.rating}</div>${v.open?'<div class="vnd-open">Open now</div>':'<div style="font-size:10px;color:#444">Closed</div>'}</div>`;
+    b.onclick=()=>pickVendor(b,v.name);
+    vl.appendChild(b);
+  });
+  document.getElementById('vnd-section').style.display='block';
+  document.getElementById('avail-section').style.display='none';
+  document.getElementById('bn2').disabled=true;
+}
+
+function pickSvcByName(type,vendorName){
+  // Used when clicking from explore — auto-select service and vendor
+  setTimeout(()=>{
+    const el=Array.from(document.querySelectorAll('.svc-card')).find(c=>c.getAttribute('onclick')?.includes(type));
+    if(el){pickSvc(el,type,{Extension:'💎','Hair Stylist':'✂','Barber':'💈','Laundry':'👕'}[type]||'✦');}
+    setTimeout(()=>{
+      const vbtn=Array.from(document.querySelectorAll('.vnd-btn')).find(b=>b.innerHTML.includes(vendorName));
+      if(vbtn)pickVendor(vbtn,vendorName);
+    },100);
+  },200);
+}
+
+function pickVendor(el,name){
+  ST.vendor=name;
+  document.querySelectorAll('.vnd-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  buildAvailability();
+  document.getElementById('avail-section').style.display='block';
+}
+
+function buildAvailability(){
+  const days=['Today','Tue','Wed','Thu','Fri','Sat'];
+  const slots=[['9:00 AM','10:30 AM','2:00 PM'],['9:00 AM','11:00 AM'],['10:00 AM','3:00 PM','5:00 PM'],['9:30 AM','1:00 PM'],['10:00 AM','2:30 PM'],['9:00 AM','11:00 AM','3:00 PM']];
+  const taken=[[1],[],[0],[1],[].[],[]];
+  document.getElementById('avail-slots').innerHTML=days.map((d,di)=>`
+    <div class="avail-day">
+      <div class="avail-date">${d}</div>
+      <div class="avail-slots">
+        ${slots[di].map((s,si)=>`<div class="slot${(taken[di]||[]).includes(si)?' taken':''}" onclick="pickSlot(this,'${d} ${s}')">${s}</div>`).join('')}
+      </div>
+    </div>`).join('');
+  document.getElementById('bn2').disabled=true;
+}
+
+function pickSlot(el,slot){
+  if(el.classList.contains('taken'))return;
+  document.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+  ST.slot=slot;
+  document.getElementById('bn2').disabled=false;
+  toast('✅ Slot reserved: '+slot);
+}
+
+function togExt(c){
+  ST.extChoice=c;
+  document.getElementById('ext-y').classList.toggle('sel',c==='yes');
+  document.getElementById('ext-n').classList.toggle('sel',c==='no');
+  document.getElementById('ext-pick').style.display=c==='no'?'block':'none';
+  updPrice();
+}
+
+function updPrice(){
+  const off=parseInt(document.getElementById('f-price').value)||0;
+  const ext=ST.extChoice==='no'?(parseInt(document.getElementById('f-ext')?.value)||0):0;
+  document.getElementById('pr-off').textContent='₦'+off.toLocaleString();
+  document.getElementById('pr-ext').textContent='+ ₦'+ext.toLocaleString();
+  document.getElementById('pr-tot').textContent='₦'+(off+ext+1500).toLocaleString();
+}
+
+function chk3(){
+  const ok=document.getElementById('f-name').value.trim()&&document.getElementById('f-email').value.trim()&&document.getElementById('f-slots').value&&document.getElementById('f-price').value;
+  document.getElementById('bn3').disabled=!ok;
+}
+
+// ── NEGOTIATE ──
+function sendNego(){
+  const inp=document.getElementById('nego-inp');
+  const val=parseInt(inp.value);
+  if(!val)return;
+  const chat=document.getElementById('nego-chat');
+  chat.innerHTML+=`<div class="chat-bubble me">I can offer ₦${val.toLocaleString()} — is that okay?<div class="chat-time" style="color:rgba(255,255,255,0.5)">You · Just now</div></div>`;
+  inp.value='';
+  document.getElementById('f-price').value=val;
+  updPrice();chk3();
+  chat.scrollTop=chat.scrollHeight;
+  setTimeout(()=>{
+    const replies=['That works for me! ✅ I\'ll accept this price.','Could you do ₦'+(val+500).toLocaleString()+'? That\'s my best price.','Deal! See you then 🙌'];
+    const r=replies[Math.floor(Math.random()*replies.length)];
+    chat.innerHTML+=`<div class="chat-bubble them">${r}<div class="chat-time">Vendor · Just now</div></div>`;
+    chat.scrollTop=chat.scrollHeight;
+  },1200);
+}
+
+// ── BOOKING STEPS ──
+function buildSummary(){
+  const off=parseInt(document.getElementById('f-price').value)||0;
+  const ext=ST.extChoice==='no'?(parseInt(document.getElementById('f-ext')?.value)||0):0;
+  const tot=off+ext+1500;
+  const slots={1:'Just me',2:'Me + 1 friend',3:'Group of 3+'}[document.getElementById('f-slots').value]||'—';
+  document.getElementById('sum-card').innerHTML=`
+    <div class="sum-row"><span class="sum-lbl">Name</span><span class="sum-val">${document.getElementById('f-name').value}</span></div>
+    <div class="sum-row"><span class="sum-lbl">Service</span><span class="sum-val">${ST.svcIcon} ${ST.svc}</span></div>
+    <div class="sum-row"><span class="sum-lbl">Vendor</span><span class="sum-val">${ST.vendor}</span></div>
+    <div class="sum-row"><span class="sum-lbl">Slot</span><span class="sum-val">🕐 ${ST.slot||'Flexible'}</span></div>
+    <div class="sum-row"><span class="sum-lbl">Location</span><span class="sum-val">📍 ${ST.locLabel}</span></div>
+    <div class="sum-row"><span class="sum-lbl">People</span><span class="sum-val">${slots}</span></div>
+    <div class="sum-row"><span class="sum-lbl">Your offer</span><span class="sum-val">₦${off.toLocaleString()}</span></div>
+    ${ext?`<div class="sum-row"><span class="sum-lbl">Extensions</span><span class="sum-val">+ ₦${ext.toLocaleString()}</span></div>`:''}
+    <div class="sum-row"><span class="sum-lbl">Bond (refundable)</span><span class="sum-val" style="color:var(--gold)">+ ₦1,500</span></div>
+    <div class="sum-row"><span class="sum-lbl" style="font-weight:700">Total in escrow</span><span class="sum-val" style="color:var(--lav);font-size:16px;font-weight:800">₦${tot.toLocaleString()}</span></div>`;
+}
+
+function step(n){
+  if(n===4)buildSummary();
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById(n==='ok'?'p-ok':'p'+n).classList.add('on');
+  ST.step=n;updProg(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updProg(n){
+  for(let i=1;i<=4;i++){
+    const c=document.getElementById('pc'+i),l=document.getElementById('pl'+i);
+    c.classList.remove('active','done');l.classList.remove('active');
+    if(i<n){c.classList.add('done');c.textContent='✓';}
+    else if(i===n){c.classList.add('active');l.classList.add('active');c.textContent=i;}
+    else{c.textContent=i;}
+    if(i<4)document.getElementById('pl-'+i).classList.toggle('done',i<n);
+  }
+}
+
+function submitBook(){
+  const tok='GLW-'+Math.random().toString(36).substr(2,4).toUpperCase();
+  document.getElementById('tok-val').textContent=tok;
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-ok').classList.add('on');
+  document.getElementById('prog-bar').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function cpyTok(){
+  const t=document.getElementById('tok-val').textContent;
+  navigator.clipboard?.writeText(t).then(()=>toast('✅ Token copied!')).catch(()=>toast('Token: '+t));
+}
+
+function resetBook(){
+  ST={loc:'',locLabel:'',svc:'',svcIcon:'',vendor:'',slot:'',extChoice:null,step:1};
+  ['f-name','f-email','f-price'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-slots').value='';
+  document.getElementById('prog-bar').style.display='flex';
+  document.getElementById('gps-card').className='gps-card';
+  document.getElementById('gps-card').onclick=()=>detectGPS();
+  document.getElementById('gps-ico').textContent='📍';
+  document.getElementById('gps-title').textContent='Use my exact location';
+  document.getElementById('gps-sub').textContent='Tap to detect — vendors sorted by distance';
+  document.querySelectorAll('.loc-btn,.svc-card,.vnd-btn,.slot').forEach(el=>el.classList.remove('sel'));
+  document.getElementById('vnd-section').style.display='none';
+  document.getElementById('avail-section').style.display='none';
+  document.getElementById('extras-hair').style.display='none';
+  document.getElementById('ext-pick').style.display='none';
+  ['bn1','bn2','bn3'].forEach(id=>document.getElementById(id).disabled=true);
+  document.getElementById('nego-chat').innerHTML='<div class="chat-bubble them">Hi! I can do this for ₦9,000 — does that work for you?<div class="chat-time">Vendor · Just now</div></div>';
+  updPrice();step(1);
+}
+
+function initBook(){step(1);document.getElementById('prog-bar').style.display='flex';}
+
+// ── TRACK ──
+function doTrack(){
+  const raw=document.getElementById('trk-inp').value.trim().toUpperCase();
+  const tok=raw.startsWith('GLW-')?raw:'GLW-'+raw;
+  const o=DEMO_ORDERS[tok];
+  const el=document.getElementById('trk-result');
+  if(!o){el.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;color:#444;margin-top:12px"><div style="font-size:28px;margin-bottom:8px">🔍</div>Token not found. Try GLW-A3X2</div>`;return;}
+  const sc={pending:'var(--gold)','in-progress':'var(--blue)',done:'var(--green)'}[o.status];
+  const sl={pending:'Awaiting vendor','in-progress':'In progress',done:'Completed'}[o.status];
+  el.innerHTML=`<div class="track-result" style="margin-top:12px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div style="font-size:28px">${o.status==='done'?'✅':o.status==='in-progress'?'⚡':'⏳'}</div>
+      <div><div style="font-size:11px;color:#444;margin-bottom:2px">Status</div><div style="font-size:16px;font-weight:700;color:${sc}">${sl}</div></div>
+    </div>
+    <div style="font-weight:700;margin-bottom:2px">${o.service}</div>
+    <div style="font-size:12px;color:#555;margin-bottom:16px">${o.vendor} · ₦${o.amount.toLocaleString()} in escrow</div>
+    <div style="font-size:10px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Timeline</div>
+    <div class="tl-wrap">${o.timeline.map(t=>`
+      <div class="tl-row">
+        <div class="tl-dot ${t.done?'done':t.cur?'cur':''}">${t.done?'✓':t.cur?'●':''}</div>
+        <div class="tl-body"><div class="tl-title" style="color:${t.done?'#E8E0F0':t.cur?'var(--lav)':'#333'}">${t.t}</div><div class="tl-time">${t.time}</div></div>
+      </div>`).join('')}
+    </div></div>`;
+}
+
+// ── NAVIGATION ──
+const screens=['s-home','s-explore','s-book','s-track'];
+const navIds=['bn-home','bn-explore','bn-book','bn-track'];
+function goScreen(id){
+  screens.forEach(s=>{document.getElementById(s).classList.remove('active');document.getElementById(s).style.display='none';});
+  document.getElementById(id).style.display='block';
+  setTimeout(()=>document.getElementById(id).classList.add('active'),10);
+  navIds.forEach(n=>document.getElementById(n).classList.remove('active'));
+  const map={s-home:'bn-home','s-explore':'bn-explore','s-book':'bn-book','s-track':'bn-track'};
+  if(map[id])document.getElementById(map[id]).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
